@@ -1,0 +1,17 @@
+<form>
+  <input
+    type="file"
+    accept="image/*"
+    name="image"
+    id="image"
+    (change)="getFile($event)"
+  />
+  <br />
+  <button (click)="submitData($event)">Submit data</button>
+</form>
+
+@if (imageUploaded) {
+  <img [src]="imageUploaded.image.secure_url" alt="Uploaded Image" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
+} @else {
+  <h3> Upload an image and see it here! </h3>
+}
