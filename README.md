@@ -1,4 +1,4 @@
-![Preview](images/preview.png)
+![Preview](images/usage-preview.png)
 
 # Angular Image Upload to Cloudinary with Node.js and Express
 
