@@ -1,17 +1,152 @@
-<form>
-  <input
-    type="file"
-    accept="image/*"
-    name="image"
-    id="image"
-    (change)="getFile($event)"
-  />
-  <br />
-  <button (click)="submitData($event)">Submit data</button>
-</form>
+<section class="flex flex-col items-center text-white min-h-screen">
+  <form
+    class="flex flex-col items-center w-80 gap-8 p-4 mt-20 bg-white bg-opacity-10 rounded-3xl"
+  >
+    <h2 class="text-2xl text-center">Image Uploader</h2>
+    <label
+      for="image"
+      class="relative flex flex-col justify-center items-center z-20 w-full py-10 border-2 border-gray-300 border-dashed rounded-lg text-center bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+    >
+      <svg
+        class="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 16"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+        />
+      </svg>
+      @if (image) {
+      <p
+        class="w-full px-4 overflow-hidden text-ellipsis whitespace-nowrap mb-2 text-sm text-gray-500 dark:text-gray-400"
+      >
+        <span class="font-semibold">{{ image.name }}</span>
+      </p>
+      <div class="flex items-center text-xs text-green-500 dark:text-green-400">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-check me-0.5"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path d="M5 12l5 5l10 -10" />
+        </svg>
 
-@if (imageUploaded) {
-  <img [src]="imageUploaded.image.secure_url" alt="Uploaded Image" style="max-width: 100%; height: auto; display: block; margin: 0 auto;">
-} @else {
-  <h3> Upload an image and see it here! </h3>
-}
+        Image Ready
+      </div>
+      } @else {
+      <p class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+        <span class="font-semibold">Click to upload</span> or drag and drop
+      </p>
+      <p class="text-xs text-gray-500 dark:text-gray-400">
+        SVG, PNG, JPG or GIF
+      </p>
+      }
+      <input
+        class="absolute z-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+        type="file"
+        accept="image/*"
+        name="image"
+        id="image"
+        [disabled]="processing.status"
+        (change)="getFile($event)"
+      />
+    </label>
+    <button
+      class="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800 disabled:cursor-not-allowed"
+      [disabled]="processing.status"
+      (click)="submitData($event)"
+    >
+      <span
+        class="flex justify-center items-center gap-1 relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+      >
+        @if(processing.status === false) {
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="icon icon-tabler icon-tabler-cloud-upload"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          stroke-width="2"
+          stroke="currentColor"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"
+          />
+          <path d="M9 15l3 -3l3 3" />
+          <path d="M12 12l0 9" />
+        </svg>
+        Upload image } @else {
+        <svg
+          aria-hidden="true"
+          role="status"
+          class="inline w-4 h-4 me-1 text-gray-200 animate-spin dark:text-gray-600 group-hover:text-gray-200"
+          viewBox="0 0 100 101"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+            fill="currentColor"
+          />
+          <path
+            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+            fill="#1C64F2"
+          />
+        </svg>
+        {{ processing.message }} }
+      </span>
+    </button>
+  </form>
+
+  @if(imageUploaded) {
+  <a
+    [href]="imageUploaded.image.secure_url"
+    target="_blank"
+    class="relative inline-flex items-center justify-center mt-7 p-0.5 overflow-hidden text-base font-medium cursor-pointer text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
+  >
+    <span
+      class="flex justify-center items-center gap-0.5 relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="icon icon-tabler icon-tabler-link"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        stroke-width="2"
+        stroke="currentColor"
+        fill="none"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+        <path d="M9 15l6 -6" />
+        <path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464" />
+        <path
+          d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"
+        />
+      </svg>
+
+      {{ processing.message }}</span
+    >
+  </a>
+  }
+</section>

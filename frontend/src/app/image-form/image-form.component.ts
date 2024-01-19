@@ -15,6 +15,10 @@ export class ImageFormComponent {
 
   image: any;
   imageUploaded: any;
+  processing = {
+    message: 'Upload an image and see it here!',
+    status: false,
+  };
 
   getFile(event: any) {
     // Saving the image
@@ -23,6 +27,10 @@ export class ImageFormComponent {
   }
 
   submitData(event: any) {
+    this.imageUploaded = null;
+    this.processing.status = true;
+    this.processing.message = 'Uploading...';
+
     // Preventing window refreshing
     event.preventDefault();
 
@@ -36,11 +44,16 @@ export class ImageFormComponent {
       .pipe(
         catchError((error) => {
           console.error(error);
+          this.processing.message =
+            'An error occurred while uploading the image :(';
+          this.processing.status = false;
           return [];
         })
       )
       .subscribe((res) => {
         this.imageUploaded = res;
+        this.processing.message = 'Click here to see the image';
+        this.processing.status = false;
         console.log(res);
       });
   }
